@@ -7,17 +7,6 @@ const RATE_LIMIT_MAX = 5; // Max requests per window
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in ms
 const MIN_SUBMISSION_TIME = 3000; // Minimum 3 seconds to fill form (bot detection)
 
-function escapeHtml(text: string): string {
-  const map: Record<string, string> = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;",
-  };
-  return text.replace(/[&<>"']/g, (char) => map[char]);
-}
-
 // Sanitize string input - ensures value is a string and removes control characters
 function sanitizeString(value: unknown): string | null {
   if (typeof value !== "string") return null;
@@ -150,33 +139,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
   }
 
-  // Escape HTML to prevent injection in email clients
-  const safeFirstName = escapeHtml(firstName);
-  const safeLastName = escapeHtml(lastName);
-  const safeEmail = escapeHtml(email);
-  const safePhone = phone ? escapeHtml(phone) : "";
-  const safeState = escapeHtml(state);
-  const safePriorInfo = priorInfo ? escapeHtml(priorInfo) : "";
-  const safeReferralSource = referralSource ? escapeHtml(referralSource) : "";
+  const fullName = `${firstName} ${lastName}`;
 
-  const fullName = `${safeFirstName} ${safeLastName}`;
+  // From address. For most providers this is the SMTP user (the mailbox). For
+  // Resend the SMTP user is the literal string "resend", so set MAIL_FROM to an
+  // address on your verified domain (e.g. contact@yourdomain.com).
+  const fromAddress = process.env.MAIL_FROM || process.env.SMTP_USER;
 
   try {
+    // Plain-text only, no external reply-to: ProtonMail's outbound SpamAssassin
+    // blocks HTML / reply-to-heavy messages (550 5.7.0). A clean text message
+    // delivers reliably across providers. The visitor's email is in the body so
+    // it can still be replied to manually.
     await transporter.sendMail({
-      from: process.env.SMTP_USER,
+      from: fromAddress,
       to: toEmail,
-      replyTo: email,
       subject: `New contact from ${fullName}`,
       text: `Name: ${firstName} ${lastName}\nEmail: ${email}\nPhone: ${phone || "N/A"}\nState: ${state}\n\nPrior Info:\n${priorInfo || "N/A"}\n\nReferral Source: ${referralSource || "N/A"}`,
-      html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${fullName}</p>
-        <p><strong>Email:</strong> ${safeEmail}</p>
-        ${safePhone ? `<p><strong>Phone:</strong> ${safePhone}</p>` : ""}
-        <p><strong>State:</strong> ${safeState}</p>
-        ${safePriorInfo ? `<h3>Prior Info:</h3><p>${safePriorInfo.replace(/\n/g, "<br>")}</p>` : ""}
-        ${safeReferralSource ? `<p><strong>How they heard about you:</strong> ${safeReferralSource}</p>` : ""}
-      `,
     });
 
     return NextResponse.json({ ok: true });

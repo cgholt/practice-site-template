@@ -16,23 +16,49 @@ the infrastructure: repo, email, CMS auth, hosting, and domain.
 - Keep it **private**.
 - Clone it locally, then `npm install` and `cp .env.example .env.local`.
 
-## 2. Set up the sending email (SMTP)
+## 2. Set up the sending email
 
-The contact form emails the client's inbox using **their** email provider — this
-is per client, not always ProtonMail. Get SMTP credentials from whoever hosts
-the client's business email, then set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`,
-`SMTP_PASS`, and `CONTACT_EMAIL` (see `.env.example`).
+The contact form emails the client's inbox when someone submits it. You have two
+choices for **how** that email is sent:
+
+**➡️ Recommended: Resend (a transactional email service).** Reliable, free at this
+volume, and avoids the consumer-mailbox pitfalls below. Full walkthrough in
+**[RESEND.md](./RESEND.md)**. Leads still land in the client's normal inbox
+(`CONTACT_EMAIL`); Resend only does the sending.
+
+**Alternative: the client's own mailbox over SMTP.** Works, but consumer
+providers fight you — see the ⚠️ pitfalls below. Get SMTP credentials from
+whoever hosts the client's business email, then set `SMTP_HOST`, `SMTP_PORT`,
+`SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, and `CONTACT_EMAIL` (see `.env.example`).
 
 | Provider | Host | Port | Auth notes |
 |---|---|---|---|
-| ProtonMail | `smtp.protonmail.ch` | 587 | Requires a paid Mail plan + generated SMTP token |
+| Resend (recommended) | `smtp.resend.com` | 465 | User = `resend`, Pass = API key; verify a sending domain, set `MAIL_FROM` |
+| ProtonMail | `smtp.protonmail.ch` | 587 | Paid plan + generated SMTP token; username is **lowercase** |
 | Google Workspace / Gmail | `smtp.gmail.com` | 587 | Turn on 2FA, create an **App Password** (not the login password) |
 | Fastmail | `smtp.fastmail.com` | 465 | App-specific password |
-| Resend (recommended if the client has no mail host) | `smtp.resend.com` | 465 | User = `resend`, Pass = API key; verify a sending domain |
 
-- `SMTP_USER` = the address that **sends** the notification.
+- `SMTP_USER` = the SMTP login (an address for most providers; the literal `resend` for Resend).
+- `MAIL_FROM` = the From address on the message (defaults to `SMTP_USER`; **required** for Resend).
 - `CONTACT_EMAIL` = where leads are **delivered** (usually the client's normal inbox).
 - Port 465 → SSL, 587 → STARTTLS (the code sets `secure` automatically from the port).
+
+### ⚠️ Consumer-mailbox pitfalls (why Resend is recommended)
+
+If you send through the client's own mailbox, watch for these — all learned the
+hard way:
+
+- **Case-sensitive username.** ProtonMail (and others) reject `Jon@…` when the
+  address is `jon@…` → `535 authentication failed`.
+- **Outbound spam filtering.** ProtonMail runs SpamAssassin on outbound SMTP and
+  will block form emails (`550 5.7.0 Blocked by SpamAssassin`) — there's no off
+  switch, even on Business plans. The route already sends clean plain-text with
+  no external reply-to to minimize this, but visitor content can still trip it.
+- **Self-send skips the Inbox.** If `MAIL_FROM` and `CONTACT_EMAIL` are the *same*
+  mailbox, the provider treats the notification as mail you sent yourself — it
+  lands in "All Mail"/"Sent" with **no Inbox notification**. Make the From
+  address different from the destination, or use Resend (mail arrives from your
+  verified domain, so it's a genuine inbound message → Inbox + notification).
 
 Test locally: `npm run dev`, submit the contact form, confirm the email lands.
 

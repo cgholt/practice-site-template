@@ -9,6 +9,7 @@ through **Decap CMS**. No database — all content lives in `content/`.
 
 - **[TEMPLATE.md](./TEMPLATE.md)** — per-client content checklist (copy, images, CMS, badges).
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** — infrastructure: repo, email/SMTP, OAuth, Vercel, domain, go-live.
+- **[RESEND.md](./RESEND.md)** — recommended way to send the contact-form email (transactional, avoids consumer-mailbox pitfalls).
 
 In short:
 
