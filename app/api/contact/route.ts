@@ -59,10 +59,14 @@ function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
   return { allowed: true, remaining: RATE_LIMIT_MAX - record.count };
 }
 
+// SMTP is per-client — set host/port to whatever provider the client's email
+// uses (ProtonMail, Google Workspace, Fastmail, Resend, etc.). Port 465 = SSL,
+// 587 = STARTTLS.
+const smtpPort = Number(process.env.SMTP_PORT) || 587;
 const transporter = nodemailer.createTransport({
-  host: "smtp.protonmail.ch",
-  port: 587,
-  secure: false,
+  host: process.env.SMTP_HOST || "smtp.protonmail.ch",
+  port: smtpPort,
+  secure: smtpPort === 465,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,

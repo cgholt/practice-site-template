@@ -7,8 +7,10 @@ through **Decap CMS**. No database — all content lives in `content/`.
 
 ## Spinning up a new client site
 
-See **[TEMPLATE.md](./TEMPLATE.md)** for the full per-client checklist (content,
-images, env vars, CMS, badges). In short:
+- **[TEMPLATE.md](./TEMPLATE.md)** — per-client content checklist (copy, images, CMS, badges).
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** — infrastructure: repo, email/SMTP, OAuth, Vercel, domain, go-live.
+
+In short:
 
 1. **Use this template** on GitHub (or clone) to create the client's repo.
 2. `cp .env.example .env.local` and fill it in (see `.env.example`).
