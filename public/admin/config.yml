@@ -1,0 +1,195 @@
+backend:
+  name: github
+  # TODO: point these at the client's repo and deployed site URL.
+  repo: your-github-username/your-repo
+  branch: main
+  base_url: https://your-domain.example
+  auth_endpoint: api/auth
+
+media_folder: public/images
+public_folder: /images
+
+collections:
+  - name: homepage
+    label: Homepage
+    files:
+      - name: hero
+        label: Hero Section
+        file: content/homepage.json
+        fields:
+          - { name: heroTitle, label: Hero Title, widget: string }
+          - { name: heroSubtitle, label: Hero Subtitle, widget: text }
+          - { name: heroCtaText, label: Button Text, widget: string }
+          - {
+              name: heroCtaHref,
+              label: Button Link,
+              widget: string,
+              default: "/#contact",
+            }
+          - {
+              name: heroImage,
+              label: Hero Image,
+              widget: image,
+              required: false,
+            }
+          - { name: heroImageCredit, label: Hero Image Credit, widget: string, required: false, hint: "Attribution text shown on hover (e.g., 'Photo by Jane Doe')" }
+          - {
+              name: heroImagePosition,
+              label: Hero Image Focal Point,
+              widget: select,
+              options: ["top", "center", "bottom"],
+              default: "center",
+              required: false,
+              hint: "Controls which part of the image stays visible when cropped",
+            }
+          - { name: quoteText, label: Quote Text, widget: text, required: false }
+          - { name: quoteAuthor, label: Quote Attribution, widget: string, required: false, hint: "e.g., 'Socrates'" }
+          - { name: quoteHighlight, label: Quote Highlight Word, widget: string, required: false, hint: "A single word in the quote to underline with the brush decoration. Leave blank for no highlight." }
+          - { name: aboutTitle, label: About Title, widget: string }
+          - { name: aboutContent, label: About Content, widget: markdown }
+          - {
+              name: aboutImage,
+              label: About Image,
+              widget: image,
+              required: false,
+            }
+          - { name: aboutImageCredit, label: About Image Credit, widget: string, required: false, hint: "Attribution text shown on hover (e.g., 'Photo by Jane Doe')" }
+          - {
+              name: testimonialsTitle,
+              label: Testimonials Section Title,
+              widget: string,
+            }
+          - { name: faqsTitle, label: FAQs Section Title, widget: string }
+
+  - name: testimonials
+    label: Testimonials
+    folder: content/testimonials
+    create: true
+    slug: "{{slug}}"
+    identifier_field: name
+    fields:
+      - { name: name, label: Client Name, widget: string }
+      - { name: quote, label: Quote, widget: text }
+      - { name: order, label: Display Order, widget: number, default: 0 }
+
+  - name: endorsements
+    label: Endorsements
+    folder: content/endorsements
+    create: true
+    slug: "{{slug}}"
+    identifier_field: name
+    fields:
+      - { name: name, label: Name, widget: string }
+      - { name: credentials, label: Credentials, widget: string }
+      - { name: quote, label: Quote, widget: text }
+      - { name: order, label: Display Order, widget: number, default: 0 }
+
+  - name: faqs
+    label: FAQs
+    folder: content/faqs
+    create: true
+    slug: "{{slug}}"
+    identifier_field: question
+    fields:
+      - { name: question, label: Question, widget: string }
+      - { name: answer, label: Answer, widget: markdown }
+      - { name: order, label: Display Order, widget: number, default: 0 }
+
+  - name: color-presets
+    label: Color Presets
+    folder: content/color-presets
+    create: true
+    slug: "{{slug}}"
+    extension: json
+    format: json
+    identifier_field: name
+    fields:
+      - { name: name, label: Preset Name, widget: string }
+      - { name: primary, label: Primary Color, widget: string, default: "#181619", hint: "Main background color (dark) — hex code" }
+      - { name: secondary, label: Secondary Color, widget: string, default: "#272a31", hint: "Secondary background color (slightly lighter) — hex code" }
+      - { name: accent, label: Accent Color, widget: string, default: "#a76b09", hint: "Accent color for buttons and highlights — hex code" }
+      - { name: surface, label: Surface Color, widget: string, default: "#f5f0eb", hint: "Light neutral color for cards and overlays — hex code", required: false }
+      - { name: deep, label: Deep Color, widget: string, default: "#3a3d45", hint: "Dark warm color for borders and deep backgrounds — hex code", required: false }
+
+  - name: banner
+    label: Notification Banner
+    files:
+      - name: banner-settings
+        label: Banner Settings
+        file: content/banner.json
+        fields:
+          - { name: enabled, label: Enabled, widget: boolean, default: true, hint: "Show or hide the notification banner across the site" }
+          - { name: text, label: Banner Text, widget: string, hint: "Main message displayed in the banner" }
+          - { name: linkText, label: Link Text, widget: string, hint: "Clickable text at the end of the banner (e.g., 'Book today!')" }
+          - { name: linkHref, label: Link URL, widget: string, default: "/#contact", hint: "Section the link directs to (e.g., '/#contact')" }
+          - { name: backgroundColor, label: Background Color, widget: string, required: false, hint: "Custom background color — hex code. Leave empty to use the site accent color." }
+          - { name: textColor, label: Text Color, widget: string, required: false, hint: "Custom text color — hex code. Leave empty to default to white." }
+
+  - name: site
+    label: Site Settings
+    files:
+      - name: settings
+        label: General Settings
+        file: content/site.json
+        fields:
+          - { name: name, label: Site Name, widget: string }
+          - { name: tagline, label: Tagline, widget: string, required: false }
+          - { name: email, label: Email Address, widget: string, required: false, hint: "Displayed in header and footer" }
+          - { name: phone, label: Phone Number, widget: string, required: false, hint: "Displayed in header and footer" }
+          - name: nav
+            label: Navigation Links
+            widget: list
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: href, label: URL, widget: string }
+              - { name: enabled, label: Show in Navbar, widget: boolean, default: true, hint: "When disabled, the page is still accessible via direct URL but won't appear in the navigation" }
+          - { name: backgroundImage, label: Background Image, widget: image, required: false, hint: "Large image displayed behind the entire site" }
+          - { name: backgroundImageCredit, label: Background Image Credit, widget: string, required: false, hint: "Attribution text shown on hover (e.g., 'Photo by Jane Doe')" }
+          - { name: backgroundOverlay, label: Background Overlay, widget: number, default: 50, min: 0, max: 100, hint: "Darkness of overlay on background image (0 = none, 100 = fully dark)" }
+          - name: activeColorPreset
+            label: Active Color Preset
+            widget: relation
+            collection: color-presets
+            search_fields: [name]
+            value_field: "{{slug}}"
+            display_fields: [name]
+            default: default
+            hint: "Select a color scheme preset for the site"
+
+  - name: layout
+    label: Page Layout
+    files:
+      - name: homepage-layout
+        label: Homepage Section Order
+        file: content/layout.json
+        fields:
+          - name: sections
+            label: Sections
+            label_singular: Section
+            widget: list
+            summary: "{{fields.label}} ({{fields.id}})"
+            fields:
+              - { name: id, label: Section ID, widget: hidden }
+              - { name: label, label: Section Name, widget: string }
+              - { name: enabled, label: Enabled, widget: boolean, default: true }
+
+  - name: contact
+    label: Contact Section
+    files:
+      - name: contact-settings
+        label: Contact Settings
+        file: content/contact.json
+        fields:
+          - { name: safetyNoticeTitle, label: Safety Notice Title, widget: string }
+          - { name: safetyNoticeContent, label: Safety Notice Content, widget: text, hint: "This notice will be shown above the contact form. Users must acknowledge it before submitting." }
+
+  - name: legal
+    label: Legal Pages
+    files:
+      - name: privacy
+        label: Privacy Policy
+        file: content/privacy.json
+        fields:
+          - { name: title, label: Page Title, widget: string }
+          - { name: lastUpdated, label: Last Updated, widget: datetime, date_format: "YYYY-MM-DD", time_format: false }
+          - { name: content, label: Content, widget: markdown }

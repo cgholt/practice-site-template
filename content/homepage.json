@@ -1,0 +1,18 @@
+{
+  "heroTitle": "A clear, benefit-driven headline goes here.",
+  "heroSubtitle": "One or two sentences describing what you offer, who it's for, and where you work. Replace this with your own copy.",
+  "heroCtaText": "BOOK A FREE CONSULTATION",
+  "heroCtaHref": "/#contact",
+  "heroImage": "",
+  "heroImageCredit": "",
+  "heroImagePosition": "center",
+  "quoteText": "The unexamined life is not worth living.",
+  "quoteAuthor": "Socrates",
+  "quoteHighlight": "life",
+  "aboutTitle": "Hi, I'm Your Name — your title, based in Your City.",
+  "aboutContent": "Use this space to introduce yourself and your approach. Describe who you work with, what a client can expect, and what makes your practice a good fit.\n\nAdd a second paragraph about your background, training, and philosophy. Keep it warm and specific — this is often the most-read section on the page.\n\nA third short paragraph can cover your credentials, the areas you focus on, or what you value in the work. Edit all of this in the CMS under Homepage.",
+  "aboutImage": "",
+  "aboutImageCredit": "",
+  "testimonialsTitle": "What clients say",
+  "faqsTitle": "Frequently asked questions"
+}

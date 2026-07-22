@@ -1,0 +1,31 @@
+{
+  "name": "Your Practice Name",
+  "tagline": "One line on who you help and how — shown in search results and social shares.",
+  "email": "hello@example.com",
+  "phone": "(555) 555-5555",
+  "nav": [
+    {
+      "label": "Home",
+      "href": "/",
+      "enabled": true
+    },
+    {
+      "label": "About",
+      "href": "/#about",
+      "enabled": true
+    },
+    {
+      "label": "FAQs",
+      "href": "/#faq",
+      "enabled": true
+    },
+    {
+      "label": "Contact",
+      "href": "/#contact",
+      "enabled": true
+    }
+  ],
+  "backgroundImage": "",
+  "backgroundOverlay": 10,
+  "activeColorPreset": "default"
+}

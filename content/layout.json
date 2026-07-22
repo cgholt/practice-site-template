@@ -1,0 +1,39 @@
+{
+  "sections": [
+    {
+      "id": "hero",
+      "label": "Hero",
+      "enabled": true
+    },
+    {
+      "id": "quote",
+      "label": "Quote",
+      "enabled": true
+    },
+    {
+      "id": "about",
+      "label": "About Me",
+      "enabled": true
+    },
+    {
+      "id": "testimonials",
+      "label": "Testimonials",
+      "enabled": false
+    },
+    {
+      "id": "endorsements",
+      "label": "Endorsements",
+      "enabled": false
+    },
+    {
+      "id": "faq",
+      "label": "FAQ",
+      "enabled": true
+    },
+    {
+      "id": "contact",
+      "label": "Contact",
+      "enabled": true
+    }
+  ]
+}
